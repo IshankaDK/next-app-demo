@@ -11,6 +11,8 @@ export default async function handler(
 ) {
   if (req.method === "GET") {
     try {
+      console.log("Database URL:", process.env.DATABASE_URL); // Log database URL
+
       // Fetch all users from the database
       const users = await prisma.user.findMany();
       res.status(200).json(users); // Send back the users in JSON format
