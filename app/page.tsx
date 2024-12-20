@@ -2,30 +2,28 @@
 
 import { User } from "@prisma/client";
 import { useEffect, useState } from "react";
+import CreateUserForm from "./createUser";
 
 export default function Page() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Fetch users data from the API route
-    const fetchUsers = async () => {
-      try {
-        const res = await fetch("/api/users");
-        if (!res.ok) {
-          throw new Error("Failed to fetch users");
-        }
-        const data = await res.json();
-        setUsers(data); // Set the fetched users to state
-        setLoading(false); // Set loading to false once data is loaded
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
+  const fetchUsers = async () => {
+    try {
+      const res = await fetch("/api/users");
+      if (!res.ok) {
+        throw new Error("Failed to fetch users");
       }
-    };
-
+      const data = await res.json();
+      setUsers(data);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchUsers();
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
 
   if (loading) return <div>Loading...</div>;
 
@@ -39,6 +37,8 @@ export default function Page() {
           </li>
         ))}
       </ul>
+
+      <CreateUserForm fetchUsers={fetchUsers} />
     </div>
   );
 }
